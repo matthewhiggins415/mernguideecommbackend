@@ -7,6 +7,21 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
+//connect to database 
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true
+    })
+    console.log(`Mongo Connected: ${conn.connection.host}`.cyan.underline)
+  } catch(error) {
+    console.error(`Error: ${error.message}`.red.underline.bold)
+  }
+}
+
+mongoose.set('strictQuery', true);
+
+connectDB()
 
 const app = express();
 
