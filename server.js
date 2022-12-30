@@ -5,6 +5,9 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const dotenv = require("dotenv");
 
+// get our routes
+const productRoutes = require('./routes/productRoutes')
+
 dotenv.config();
 
 //connect to database 
@@ -33,6 +36,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/', (req, res) => {
   res.json({ message: `here's process.env.NODE_ENV: ${process.env.NODE_ENV}` })
 })
+
+app.use(productRoutes)
 
 let port = process.env.PORT || 5000
 
