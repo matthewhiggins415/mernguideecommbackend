@@ -15,6 +15,14 @@ router.post('/product', async (req, res, next) => {
 })
 
 // get all products 
+router.get('/products', async (req, res, next) => {
+  try {
+    let products = await Product.find()
+    res.json({ products })
+  } catch(error) {
+    console.error(`Error msg: ${error.message}`)
+  }
+})
 
 // get a single product 
 
