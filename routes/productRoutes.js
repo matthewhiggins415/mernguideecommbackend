@@ -34,7 +34,54 @@ router.get('/products/:id', async (req, res, next) => {
   }
 })
 
-// update 
+// update
+router.patch('/products/:id', async (req, res, next) => {
+  let data = req.body.product
+  let id = req.params.id
+  
+  try {
+    let product = await Product.findById(id)
+  
+    if (data.name) {
+      product.name = data.name
+    }
+  
+    if (data.price) {
+      product.price = data.price
+    }
+  
+    if (data.imageOne) {
+      product.imageOne = data.imageOne
+    }
+  
+    if (data.imageTwo) {
+      product.imageTwo = data.imageTwo
+    }
+  
+    if (data.imageThree) {
+      product.imageThree = data.imageThree
+    }
+  
+    if (data.imageFour) {
+      product.imageFour = data.imageFour
+    }
+  
+    if (data.price) {
+      product.price = data.price
+    }
+    
+    if (data.decription) {
+      product.decription = data.decription
+    }
+  
+    let newProduct = await product.save()
+  
+    res.json({ newProduct })
+  } catch (error) {
+    console.error(`Error msg: ${error.message}`)
+  }
+})
+
 
 // delete 
 
