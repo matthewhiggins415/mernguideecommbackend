@@ -70,8 +70,8 @@ router.patch('/products/:id', async (req, res, next) => {
       product.price = data.price
     }
     
-    if (data.decription) {
-      product.decription = data.decription
+    if (data.description) {
+      product.description = data.description
     }
   
     let newProduct = await product.save()
