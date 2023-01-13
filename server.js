@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 
 // get our routes
 const productRoutes = require('./routes/productRoutes')
+const stripeRoutes = require('./routes/stripeRoutes')
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.get('/', (req, res) => {
 })
 
 app.use(productRoutes)
+app.use(stripeRoutes)
 
 let port = process.env.PORT || 5000
 
