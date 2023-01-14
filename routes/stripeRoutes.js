@@ -11,18 +11,6 @@ router.post('/checkout', async (req, res) => {
 
   let lineItems = []
 
-  // line_item: {
-//       price_data: {
-//         currency: 'usd', 
-//         product_data: {
-//         name: "name", 
-//         images: ["src"]
-//       }, 
-//       unit_amount: price * 100,
-//      }, 
-//       quantity: 2
-//  }
-
   for (const item of cart) {
     console.log(item)
     const { id, quantity } = item
@@ -43,13 +31,26 @@ router.post('/checkout', async (req, res) => {
     }
 
     lineItems.push(lineItem)
-
-
   }
 
   console.log(lineItems)
 
   const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    shipping_address_collection: {allowed_countries: ['US', 'CA']},
+    shipping_options: [
+      {
+        shipping_rate_data: {
+          type: 'fixed_amount',
+          fixed_amount: {amount: 500, currency: 'usd'},
+          display_name: '$5 shipping',
+          delivery_estimate: {
+            minimum: {unit: 'business_day', value: 5},
+            maximum: {unit: 'business_day', value: 7},
+          },
+        },
+      },
+    ],
     line_items: lineItems, 
     mode: 'payment', 
     success_url: 'http://localhost:3000/success',
@@ -57,7 +58,7 @@ router.post('/checkout', async (req, res) => {
   })
 
   res.json({ "url": session.url })
-
 })
+
 
 module.exports = router
