@@ -64,6 +64,8 @@ router.get('/order/success', async (req, res) => {
   const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
   const listItems = await stripe.checkout.sessions.listLineItems(req.query.session_id)
   
+  console.log(session)
+
   const shippingDetails = session.shipping_details
   const customerDetails = session.customer_details
   const orderDetails = listItems.data
@@ -71,7 +73,10 @@ router.get('/order/success', async (req, res) => {
   res.json({
     shippingDetails: shippingDetails,
     customerDetails: customerDetails,
-    orderDetails: orderDetails
+    orderDetails: orderDetails, 
+    subTotal: session.amount_subtotal,
+    total: session.amount_total,
+    shippingCost: session.shipping_cost.amount_total
   })
 });
 
