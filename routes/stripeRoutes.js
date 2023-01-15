@@ -53,12 +53,26 @@ router.post('/checkout', async (req, res) => {
     ],
     line_items: lineItems, 
     mode: 'payment', 
-    success_url: 'http://localhost:3000/success',
+    success_url: "http://localhost:3000/order/success?session_id={CHECKOUT_SESSION_ID}",
     cancel_url: 'http://localhost:3000/cancel'
   })
 
   res.json({ "url": session.url })
 })
 
+router.get('/order/success', async (req, res) => {
+  const session = await stripe.checkout.sessions.retrieve(req.query.session_id);
+  const listItems = await stripe.checkout.sessions.listLineItems(req.query.session_id)
+  
+  const shippingDetails = session.shipping_details
+  const customerDetails = session.customer_details
+  const orderDetails = listItems.data
+  
+  res.json({
+    shippingDetails: shippingDetails,
+    customerDetails: customerDetails,
+    orderDetails: orderDetails
+  })
+});
 
 module.exports = router
