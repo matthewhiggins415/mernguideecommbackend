@@ -1,21 +1,37 @@
 const express = require('express')
 const router = express.Router()
+const dotenv = require("dotenv");
 
-const stripe = require('stripe')('sk_test_51MPF6BGMgQtLI79Vke2qA5psRAQL3uChje6RF3xAyCQgkZd5tOMP9NoHaMdvNy9rgQg5xQYF1xV36P26HyUgIKmf005sjvEhQZ');
+dotenv.config()
+
+const stripe = require('stripe')(process.env.STRIPE_KEY);
 
 const Product = require('../models/productSchema')
 
 router.post('/checkout', async (req, res) => {
+
+  let host = req.get("host")
+  console.log("host:", host)
+
+  let apiUrl 
+
+  const apiUrls = {
+    production: "https://gallacticcat.com", 
+    development: "http://localhost:3000"
+  }
+
+  if (host === 'localhost:5000') {
+    apiUrl = apiUrls.development
+  } else {
+    apiUrl = apiUrls.production
+  }
   const { cart } = req.body
-  console.log(cart)
 
   let lineItems = []
 
   for (const item of cart) {
-    console.log(item)
     const { id, quantity } = item
     let product = await Product.findById({_id: id})
-    console.log(product)
     const { name, price, imageOne } = product
 
     const lineItem = {
@@ -32,8 +48,6 @@ router.post('/checkout', async (req, res) => {
 
     lineItems.push(lineItem)
   }
-
-  console.log(lineItems)
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
@@ -53,8 +67,8 @@ router.post('/checkout', async (req, res) => {
     ],
     line_items: lineItems, 
     mode: 'payment', 
-    success_url: "http://localhost:3000/order/success?session_id={CHECKOUT_SESSION_ID}",
-    cancel_url: 'http://localhost:3000/cancel'
+    success_url: `${apiUrl}/order/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${apiUrl}/`
   })
 
   res.json({ "url": session.url })
