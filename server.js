@@ -4,6 +4,7 @@ const color = require('colors')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const dotenv = require("dotenv");
+const auth = require('./lib/auth')
 
 // get our routes
 const productRoutes = require('./routes/productRoutes')
@@ -39,6 +40,7 @@ app.get('/', (req, res) => {
   res.json({ message: `here's process.env.NODE_ENV: ${process.env.NODE_ENV}` })
 })
 
+app.use(auth)
 app.use(productRoutes)
 app.use(stripeRoutes)
 app.use(userRoutes)

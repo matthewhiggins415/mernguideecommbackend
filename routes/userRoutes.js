@@ -9,6 +9,8 @@ const User = require('../models/userSchema')
 
 const bcryptSaltRounds = 10
 
+const requireToken = passport.authenticate('bearer', { session: false })
+
 router.post('/register', async (req, res, next) => {
   const { credentials } = req.body
   const { email, password, password_confirmation } = credentials
@@ -57,6 +59,13 @@ router.post('/login', async (req, res, next) => {
   await user.save()
 
   res.json({ user: user })
+})
+
+// sign-out route
+router.delete('/sign-out', requireToken, async (req, res, next) => {
+  req.user.token = null 
+  await req.user.save()
+  res.sendStatus(204)
 })
 
 module.exports = router
