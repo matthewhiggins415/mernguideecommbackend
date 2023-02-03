@@ -1,13 +1,18 @@
 const express = require('express')
 const router = express.Router()
+const passport = require('passport')
 
 const Product = require('../models/productSchema')
 
+const requireToken = passport.authenticate('bearer', { session: false })
+
+
 // create
-router.post('/product', async (req, res, next) => {
+router.post('/product', requireToken, async (req, res, next) => {
   try {
     let newProduct = await Product.create({})
-    res.json({ newProduct })
+    let products = await Product.find()
+    res.json({ products: products })
   } catch(error) {
     console.error(`Error msg: ${error.message}`)
   }
