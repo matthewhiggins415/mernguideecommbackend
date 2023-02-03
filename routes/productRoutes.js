@@ -88,13 +88,13 @@ router.patch('/products/:id', async (req, res, next) => {
 })
 
 // delete 
-router.delete('/products/:id', async (req, res, next) => {
+router.delete('/products/:id', requireToken, async (req, res, next) => {
   let id = req.params.id
 
   try {
     await Product.findByIdAndDelete(id)
     let products = await Product.find()
-    res.json({ products })
+    res.json({ products: products })
   } catch (error) {
     console.error(`Error msg: ${error.message}`)
   }
