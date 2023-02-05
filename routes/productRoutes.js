@@ -40,48 +40,49 @@ router.get('/products/:id', async (req, res, next) => {
 })
 
 // update
-router.patch('/products/:id', async (req, res, next) => {
-  let data = req.body.product
+router.patch('/products/:id', requireToken, async (req, res, next) => {
+  console.log(req.body)
+  const { imageOne, imageTwo, imageThree, imageFour, name, description, price } = req.body
   let id = req.params.id
   
   try {
     let product = await Product.findById(id)
   
-    if (data.name) {
-      product.name = data.name
+    if (name) {
+      product.name = name
     }
   
-    if (data.price) {
-      product.price = data.price
+    if (price) {
+      product.price = price
     }
   
-    if (data.imageOne) {
-      product.imageOne = data.imageOne
+    if (imageOne) {
+      product.imageOne = imageOne
     }
   
-    if (data.imageTwo) {
-      product.imageTwo = data.imageTwo
+    if (imageTwo) {
+      product.imageTwo = imageTwo
     }
   
-    if (data.imageThree) {
-      product.imageThree = data.imageThree
+    if (imageThree) {
+      product.imageThree = imageThree
     }
   
-    if (data.imageFour) {
-      product.imageFour = data.imageFour
+    if (imageFour) {
+      product.imageFour = imageFour
     }
   
-    if (data.price) {
-      product.price = data.price
+    if (price) {
+      product.price = price
     }
     
-    if (data.description) {
-      product.description = data.description
+    if (description) {
+      product.description = description
     }
   
     let newProduct = await product.save()
-  
-    res.json({ newProduct })
+    let products = await Product.find()
+    res.json({ products: products })
   } catch (error) {
     console.error(`Error msg: ${error.message}`)
   }
