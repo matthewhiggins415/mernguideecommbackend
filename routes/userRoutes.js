@@ -11,31 +11,31 @@ const bcryptSaltRounds = 10
 
 const requireToken = passport.authenticate('bearer', { session: false })
 
-router.post('/register', async (req, res, next) => {
-  const { credentials } = req.body
-  const { email, password, password_confirmation } = credentials
-  console.log(email, password, password_confirmation)
+// router.post('/register', async (req, res, next) => {
+//   const { credentials } = req.body
+//   const { email, password, password_confirmation } = credentials
+//   console.log(email, password, password_confirmation)
 
-  if (!email || !password || password !== password_confirmation) {
-    res.json({msg: "registration failed"})
-  }
+//   if (!email || !password || password !== password_confirmation) {
+//     res.json({msg: "registration failed"})
+//   }
 
-  const hash = await bcrypt.hash(password, bcryptSaltRounds)
+//   const hash = await bcrypt.hash(password, bcryptSaltRounds)
 
-  const userObj = {
-    email: email,
-    hashedPassword: hash
-  }
+//   const userObj = {
+//     email: email,
+//     hashedPassword: hash
+//   }
 
 
-  let user = await User.create(userObj)
+//   let user = await User.create(userObj)
   
-  const token = crypto.randomBytes(16).toString('hex')
-  user.token = token 
-  await user.save()
+//   const token = crypto.randomBytes(16).toString('hex')
+//   user.token = token 
+//   await user.save()
 
-  res.json({ user: user })
-})
+//   res.json({ user: user })
+// })
 
 //login route 
 router.post('/login', async (req, res, next) => {
