@@ -56,8 +56,8 @@ router.post('/checkout', async (req, res) => {
       {
         shipping_rate_data: {
           type: 'fixed_amount',
-          fixed_amount: {amount: 500, currency: 'usd'},
-          display_name: '$5 shipping',
+          fixed_amount: {amount: 400, currency: 'usd'},
+          display_name: '$4 shipping',
           delivery_estimate: {
             minimum: {unit: 'business_day', value: 5},
             maximum: {unit: 'business_day', value: 7},
